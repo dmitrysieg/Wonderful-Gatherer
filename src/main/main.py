@@ -1,39 +1,8 @@
+# coding=utf-8
 import wx
-
+from minesweeper_widgets import WGFieldButton
 
 _version = "1.0"
-
-
-class WGFieldButton(wx.Panel):
-    def __init__(self, parent, pos):
-        wx.Panel.__init__(self, parent=parent, pos=pos)
-
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
-        self.Bind(wx.EVT_SIZE, self.OnSize)
-
-        self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
-
-    def OnPaint(self, event):
-        dc = wx.PaintDC(self)
-        dc.SetPen(wx.Pen('#C0C0C0'))
-        dc.SetBrush(wx.Brush('#C0C0C0'))
-        dc.DrawRectangle(0, 0, 18, 18)
-
-        dc.SetPen(wx.WHITE_PEN)
-        dc.DrawLine(0, 0, 20, 0)
-        dc.DrawLine(0, 0, 0, 20)
-        dc.SetPen(wx.Pen('#808080'))
-        dc.DrawLine(19, 0, 19, 19)
-        dc.DrawLine(0, 19, 20, 19)
-
-    def OnLeftDown(self, event):
-        dc = wx.PaintDC(self)
-        dc.SetPen(wx.Pen('#C0C0C0'))
-        dc.SetBrush(wx.Brush('#C0C0C0'))
-        dc.DrawRectangle(0, 0, 19, 19)
-
-    def OnSize(self, event):
-        self.Refresh()
 
 
 def main():
