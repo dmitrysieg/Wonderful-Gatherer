@@ -3,11 +3,16 @@ import wx
 from minesweeper_widgets import WGFieldButton
 
 _version = "1.0"
+_h_number = 16
+_v_number = 16
 
 
 def main():
     app = wx.App()
-    window = wx.Frame(None, title="Wonderful Gatherer v" + str(_version), size=(400, 300))
+    window = wx.Frame(None,
+                      title="Wonderful Gatherer v" + str(_version),
+                      size=(32 + _h_number * 20, 158 + _v_number * 20),
+                      style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
     window.SetBackgroundColour(wx.LIGHT_GREY)
 
     menu_bar = wx.MenuBar()
@@ -32,12 +37,14 @@ def main():
 
     v_game_panel = wx.Panel(panel, style=wx.SUNKEN_BORDER)
 
-    # g_main_grid = wx.GridSizer(rows=16, cols=16)
-    b_one = WGFieldButton(v_game_panel, pos=(32, 32))
-    b_one.SetBackgroundColour(wx.LIGHT_GREY)
+    buttons = []
+    for j in range(0, _v_number):
+        buttons.append([])
+        for i in range(0, _h_number):
+            buttons[j].append(WGFieldButton(v_game_panel, pos=(i * 20, j * 20)))
 
     v_inner_box = wx.BoxSizer(wx.VERTICAL)
-    v_inner_box.Add(v_score_panel, 2, wx.EXPAND | wx.ALL, border=4)
+    v_inner_box.Add(v_score_panel, 2, wx.EXPAND | wx.ALL, border=4) # todo fixed size
     v_inner_box.Add(v_game_panel, 8, wx.EXPAND | wx.ALL, border=4)
 
     panel.SetAutoLayout(True)

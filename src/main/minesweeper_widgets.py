@@ -48,7 +48,6 @@ class WGFieldButton(wx.Panel):
         self.Refresh()
 
     def OnLeave(self, event):
-        print("leave")
         self.pressed = False
         self.Refresh()
 
