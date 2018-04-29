@@ -1,6 +1,7 @@
 # coding=utf-8
 import wx
 from minesweeper_widgets import WGFieldButton
+from minesweeper_field import WGField
 
 _version = "1.0"
 _h_number = 16
@@ -37,11 +38,23 @@ def main():
 
     v_game_panel = wx.Panel(panel, style=wx.SUNKEN_BORDER)
 
+    wg_field = WGField(_h_number, _v_number).initialize()
+
+    def WGClickHandler(_self):
+        v_game_panel.RemoveChild(_self)
+        if wg_field.get(_self.x_index, _self.y_index) > 0:
+            wx_bmap = wx.Bitmap(1, 1)
+            wx_bmap.LoadFile("../../img/apple.png", wx.BITMAP_TYPE_ANY)
+            wx.StaticBitmap(v_game_panel, pos=(_self.x_index * 20, _self.y_index * 20), bitmap=wx_bmap)
+        _self.Destroy()
+
     buttons = []
     for j in range(0, _v_number):
         buttons.append([])
         for i in range(0, _h_number):
-            buttons[j].append(WGFieldButton(v_game_panel, pos=(i * 20, j * 20)))
+            button = WGFieldButton(v_game_panel, (i * 20, j * 20), i, j)
+            button.SetOnClick(WGClickHandler)
+            buttons[j].append(button)
 
     v_inner_box = wx.BoxSizer(wx.VERTICAL)
     v_inner_box.Add(v_score_panel, 2, wx.EXPAND | wx.ALL, border=4) # todo fixed size

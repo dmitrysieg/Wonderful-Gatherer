@@ -2,18 +2,23 @@ import wx
 
 
 class WGFieldButton(wx.Panel):
-    def __init__(self, parent, pos):
+    def __init__(self, parent, pos, x_index, y_index):
         wx.Panel.__init__(self, parent=parent, pos=pos)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
+        # Handlers
+        self.OnClick = lambda: None
         self.Bind(wx.EVT_LEFT_DOWN  , self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP    , self.OnLeftUp)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
 
+        # Properties
         self.pressed = False
+        self.x_index = x_index
+        self.y_index = y_index
 
     def OnPaint(self, event):
         if not self.pressed:
@@ -40,8 +45,10 @@ class WGFieldButton(wx.Panel):
         self.Refresh()
 
     def OnLeftUp(self, event):
-        self.pressed = False
-        self.Refresh()
+        if self.pressed:
+            self.pressed = False
+            self.Refresh()
+            self.OnClick(self)
 
     def OnDClick(self, event):
         self.pressed = True
@@ -50,6 +57,9 @@ class WGFieldButton(wx.Panel):
     def OnLeave(self, event):
         self.pressed = False
         self.Refresh()
+
+    def SetOnClick(self, handler):
+        self.OnClick = handler
 
     def OnSize(self, event):
         self.Refresh()
