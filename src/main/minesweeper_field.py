@@ -22,8 +22,7 @@ class WGField:
             self.field.append([])
             for i in range(0, self.width):
                 cell = WGCell()
-                if random.randint(0, 99) < 10:
-                    cell.mines = 1
+                cell.mines = self.define_mine(i, j)
 
                 self.field[j].append(cell)
 
@@ -33,6 +32,13 @@ class WGField:
                 self.field[i][j].around = self.getAround(j, i)
 
         return self
+
+    @staticmethod
+    def define_mine(x, y):
+        if random.randint(0, 99) < 10:
+            return 1
+        else:
+            return 0
 
     def isMine(self, x, y):
         return self.field[y][x].mines > 0
