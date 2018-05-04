@@ -2,21 +2,29 @@ import wx
 
 
 class WGFieldButton(wx.Panel):
+
     def __init__(self, parent, pos, x_index, y_index):
         wx.Panel.__init__(self, parent=parent, pos=pos)
+
+        self.mark_bmap = wx.Bitmap(1, 1)
+        self.mark_bmap.LoadFile("../../img/warning_a.gif", wx.BITMAP_TYPE_ANY)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
         # Handlers
         self.OnClick = lambda: None
-        self.Bind(wx.EVT_LEFT_DOWN  , self.OnLeftDown)
-        self.Bind(wx.EVT_LEFT_UP    , self.OnLeftUp)
-        self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
+        self.Bind(wx.EVT_LEFT_DOWN   , self.OnLeftDown)
+        self.Bind(wx.EVT_LEFT_UP     , self.OnLeftUp)
+        self.Bind(wx.EVT_RIGHT_DOWN  , self.OnRightDown)
+        self.Bind(wx.EVT_RIGHT_UP    , self.OnRightUp)
+        self.Bind(wx.EVT_LEFT_DCLICK , self.OnDClick)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
 
         # Properties
         self.pressed = False
+        self.marked = False
+        self.markInProgress = False
         self.x_index = x_index
         self.y_index = y_index
 
@@ -34,6 +42,8 @@ class WGFieldButton(wx.Panel):
             dc.SetPen(wx.Pen('#808080'))
             dc.DrawLine(19, 0, 19, 19)
             dc.DrawLine(0, 19, 20, 19)
+            if self.marked:
+                dc.DrawBitmap(self.mark_bmap, 2, 2, True)
         else:
             dc = wx.PaintDC(self)
             dc.SetPen(wx.Pen('#C0C0C0'))
@@ -54,8 +64,17 @@ class WGFieldButton(wx.Panel):
         self.pressed = True
         self.Refresh()
 
+    def OnRightDown(self, event):
+        self.markInProgress = True
+
+    def OnRightUp(self, event):
+        if self.markInProgress:
+            self.marked = not self.marked
+            self.Refresh()
+
     def OnLeave(self, event):
         self.pressed = False
+        self.markInProgress = False
         self.Refresh()
 
     def SetOnClick(self, handler):
