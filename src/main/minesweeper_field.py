@@ -14,6 +14,8 @@ class WGField:
         self.width = width
         self.height = height
         self.field = []
+        self.mines = []
+        self.mines_left = None
 
     def initialize(self):
 
@@ -23,8 +25,12 @@ class WGField:
             for i in range(0, self.width):
                 cell = WGCell()
                 cell.mines = WGField.define_mine(i, j)
+                if cell.mines > 0:
+                    self.mines.append((i, j))
 
                 self.field[j].append(cell)
+
+        self.mines_left = len(self.mines)
 
         # calc numbers
         for j in range(0, self.height):

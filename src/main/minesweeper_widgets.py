@@ -71,6 +71,7 @@ class WGFieldButton(wx.Panel):
         if self.markInProgress:
             self.marked = not self.marked
             self.Refresh()
+            self.GetParent().controller.refresh_after_mark(self.x_index, self.y_index, self.marked)
 
     def OnLeave(self, event):
         self.pressed = False

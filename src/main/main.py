@@ -1,8 +1,8 @@
 # coding=utf-8
 import wx
-from minesweeper_widgets import WGFieldButton
 from minesweeper_field import WGField
 from minesweeper_field_view import WGFieldView
+from controller import WGController
 
 _version = "1.0"
 _h_number = 16
@@ -36,6 +36,7 @@ def main():
     outer_box.Add(panel, 0, wx.EXPAND | wx.ALL, 4)
 
     v_score_panel = wx.Panel(panel, style=wx.SUNKEN_BORDER)
+    v_score = wx.StaticText(v_score_panel, pos=(20, 10), label="")
 
     wg_field = WGField(_h_number, _v_number).initialize()
     v_game_panel = WGFieldView(panel, _h_number, _v_number, wg_field).initialize()
@@ -43,6 +44,8 @@ def main():
     v_inner_box = wx.BoxSizer(wx.VERTICAL)
     v_inner_box.Add(v_score_panel, 2, wx.EXPAND | wx.ALL, border=4) # todo fixed size
     v_inner_box.Add(v_game_panel, 8, wx.EXPAND | wx.ALL, border=4)
+
+    controller = WGController(v_score_panel, v_game_panel, v_score)
 
     panel.SetAutoLayout(True)
     panel.SetSizer(v_inner_box)
