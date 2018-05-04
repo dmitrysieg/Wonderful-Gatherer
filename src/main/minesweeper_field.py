@@ -22,7 +22,7 @@ class WGField:
             self.field.append([])
             for i in range(0, self.width):
                 cell = WGCell()
-                cell.mines = self.define_mine(i, j)
+                cell.mines = WGField.define_mine(i, j)
 
                 self.field[j].append(cell)
 
