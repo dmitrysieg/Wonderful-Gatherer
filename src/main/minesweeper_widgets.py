@@ -22,6 +22,7 @@ class WGFieldButton(wx.Panel):
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
 
         # Properties
+        self.disabled = False
         self.pressed = False
         self.marked = False
         self.markInProgress = False
@@ -51,8 +52,9 @@ class WGFieldButton(wx.Panel):
             dc.DrawRectangle(0, 0, 19, 19)
 
     def OnLeftDown(self, event):
-        self.pressed = True
-        self.Refresh()
+        if not self.disabled:
+            self.pressed = True
+            self.Refresh()
 
     def OnLeftUp(self, event):
         if self.pressed:
@@ -61,11 +63,13 @@ class WGFieldButton(wx.Panel):
             self.OnClick(self)
 
     def OnDClick(self, event):
-        self.pressed = True
-        self.Refresh()
+        if not self.disabled:
+            self.pressed = True
+            self.Refresh()
 
     def OnRightDown(self, event):
-        self.markInProgress = True
+        if not self.disabled:
+            self.markInProgress = True
 
     def OnRightUp(self, event):
         if self.markInProgress:
