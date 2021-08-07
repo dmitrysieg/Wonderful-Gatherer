@@ -1,12 +1,22 @@
+import wx
+
+
 class WGController(object):
 
-    def __init__(self, score_panel, game_panel, score):
+    def __init__(self, window, score_panel, game_panel, score):
+        self.window = window
         self.score_panel = score_panel
         self.score_panel.controller = self
         self.game_panel = game_panel
         self.game_panel.controller = self
         self.score = score
         self.print_remaining()
+
+    def onExit(self, event):
+        self.window.Close()
+
+    def BindMenu(self, menu):
+        menu.getMenuBar().Bind(wx.EVT_MENU, self.onExit, menu.getMenuExit())
 
     def reveal(self, x, y):
         self.game_panel.buttons[y][x].Destroy()

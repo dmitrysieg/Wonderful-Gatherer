@@ -2,6 +2,7 @@
 import wx
 from minesweeper_field import WGField
 from minesweeper_field_view import WGFieldView
+from menu import MSMenu
 from controller import WGController
 
 _version = "1.0"
@@ -16,19 +17,8 @@ def main():
                       size=(32 + _h_number * 20, 158 + _v_number * 20),
                       style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
     window.SetBackgroundColour(wx.LIGHT_GREY)
-
-    menu_bar = wx.MenuBar()
-
-    menu_file = wx.Menu()
-    menu_file.Append(101, "Выход")
-
-    menu_help = wx.Menu()
-    menu_help.Append(201, "О программе")
-
-    menu_bar.Append(menu_file, "Файл")
-    menu_bar.Append(menu_help, "Помощь")
-
-    window.SetMenuBar(menu_bar)
+    menu = MSMenu(window)
+    window.SetMenuBar(menu.getMenuBar())
 
     outer_box = wx.GridSizer(1)
     panel = wx.Panel(window, style=wx.RAISED_BORDER)
@@ -45,7 +35,8 @@ def main():
     v_inner_box.Add(v_score_panel, 2, wx.EXPAND | wx.ALL, border=4) # todo fixed size
     v_inner_box.Add(v_game_panel, 8, wx.EXPAND | wx.ALL, border=4)
 
-    controller = WGController(v_score_panel, v_game_panel, v_score)
+    controller = WGController(window, v_score_panel, v_game_panel, v_score)
+    controller.BindMenu(menu)
 
     panel.SetAutoLayout(True)
     panel.SetSizer(v_inner_box)
