@@ -1,7 +1,7 @@
 # coding=utf-8
 import wx
 from minesweeper_field import MSField
-from minesweeper_field_view import WGFieldView
+from minesweeper_field_view import MSFieldView
 from menu import MSMenu
 
 
@@ -31,7 +31,7 @@ class MSView:
         self.score = wx.StaticText(self.score_panel, pos=(20, 10), label="")
 
         self.field = MSField(_h_number, _v_number).initialize()
-        self.game_panel = WGFieldView(self, panel, _h_number, _v_number, self.field).initialize()
+        self.game_panel = MSFieldView(self, panel, _h_number, _v_number, self.field).initialize()
 
         innerBox = wx.BoxSizer(wx.VERTICAL)
         innerBox.Add(self.score_panel, 2, wx.EXPAND | wx.ALL, border=4) # todo fixed size

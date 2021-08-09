@@ -1,7 +1,7 @@
 import wx
 
 
-class WGFieldButton(wx.Panel):
+class MSFieldButton(wx.Panel):
 
     def __init__(self, parent, pos, x_index, y_index):
         wx.Panel.__init__(self, parent=parent, pos=pos)

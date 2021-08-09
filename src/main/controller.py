@@ -10,7 +10,7 @@ class MSController(object):
         else:
             around = field_view.field.get_around(button.x_index, button.y_index)
             if around > 0:
-                wx.StaticText(field_view, pos=(button.x_index * 20, button.y_index * 20), label=str(around))
+                field_view.show_amount(button.x_index, button.y_index, around)
             else:
                 field_view.field.reveal_around(field_view, button.x_index, button.y_index)
             field_view.field.field[button.y_index][button.x_index].revealed = True

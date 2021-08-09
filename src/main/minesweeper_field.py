@@ -94,7 +94,7 @@ class MSField:
                 self.visit(next, visited, x + 1, y + 1)
         return next
 
-    def reveal_around(self, game_panel, x, y):
+    def reveal_around(self, field_view, x, y):
         visited = [[False for i in range(self.width)] for j in range(self.height)]
         visited[y][x] = True
         stack = self.get_next(visited, x, y)
@@ -107,11 +107,11 @@ class MSField:
                 cell = self.field[_y][_x]
 
                 if not cell.revealed:
-                    game_panel.buttons[_y][_x].Destroy()
+                    field_view.buttons[_y][_x].Destroy()
                     cell.revealed = True
 
                 if cell.around > 0:
-                    wx.StaticText(game_panel, pos=(_x * 20, _y * 20), label=str(cell.around))
+                    field_view.show_amount(_x, _y, cell.around)
                 else:
                     front.extend(self.get_next(visited, _x, _y))
             stack = front
