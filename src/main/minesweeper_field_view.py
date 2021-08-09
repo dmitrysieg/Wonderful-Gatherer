@@ -2,23 +2,10 @@ import wx
 from minesweeper_widgets import WGFieldButton
 
 
-def WGClickHandler(button):
-    field_view = button.parent
-    if field_view.field.isMine(button.x_index, button.y_index):
-        field_view.controller.lose()
-    else:
-        around = field_view.field.getAround(button.x_index, button.y_index)
-        if around > 0:
-            wx.StaticText(field_view, pos=(button.x_index * 20, button.y_index * 20), label=str(around))
-        else:
-            field_view.field.RevealAround(field_view, button.x_index, button.y_index)
-        field_view.field.field[button.y_index][button.x_index].revealed = True
-        button.Destroy()
-
-
 class WGFieldView(wx.Panel):
-    def __init__(self, parent, width, height, field):
+    def __init__(self, view, parent, width, height, field):
         wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
+        self.view = view
         self.width = width
         self.height = height
         self.field = field
@@ -32,9 +19,12 @@ class WGFieldView(wx.Panel):
             for i in range(0, self.width):
                 button = WGFieldButton(self, (i * 20, j * 20), i, j)
                 button.parent = self
-                button.SetOnClick(WGClickHandler)
+                button.SetOnClick(self.ClickHandler)
                 self.buttons[j].append(button)
         return self
 
     def show_mine(self, x, y):
         wx.StaticBitmap(self, pos=(x * 20, y * 20), bitmap=self.bmap)
+
+    def ClickHandler(self, button):
+        self.view.controller.WGClickHandler(button, self.view.controller)

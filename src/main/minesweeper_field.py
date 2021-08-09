@@ -2,14 +2,14 @@ import random
 import wx
 
 
-class WGCell:
+class MSCell:
     def __init__(self):
         self.mines = 0
         self.around = 0
         self.revealed = False
 
 
-class WGField:
+class MSField:
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -23,8 +23,8 @@ class WGField:
         for j in range(0, self.height):
             self.field.append([])
             for i in range(0, self.width):
-                cell = WGCell()
-                cell.mines = WGField.define_mine(i, j)
+                cell = MSCell()
+                cell.mines = MSField.define_mine(i, j)
                 if cell.mines > 0:
                     self.mines.append((i, j))
 
@@ -35,7 +35,7 @@ class WGField:
         # calc numbers
         for j in range(0, self.height):
             for i in range(0, self.width):
-                self.field[i][j].around = self.getAround(j, i)
+                self.field[i][j].around = self.get_around(j, i)
 
         return self
 
@@ -46,10 +46,10 @@ class WGField:
         else:
             return 0
 
-    def isMine(self, x, y):
+    def is_mine(self, x, y):
         return self.field[y][x].mines > 0
 
-    def getAround(self, x, y):
+    def get_around(self, x, y):
         sum = 0
         if x > 0:
             sum += self.field[y][x - 1].mines
@@ -74,7 +74,7 @@ class WGField:
             acc.append((x, y))
             visited[y][x] = True
 
-    def getNext(self, visited, x, y):
+    def get_next(self, visited, x, y):
         next = []
         if x > 0:
             self.visit(next, visited, x - 1, y)
@@ -94,10 +94,10 @@ class WGField:
                 self.visit(next, visited, x + 1, y + 1)
         return next
 
-    def RevealAround(self, v_game_panel, x, y):
+    def reveal_around(self, game_panel, x, y):
         visited = [[False for i in range(self.width)] for j in range(self.height)]
         visited[y][x] = True
-        stack = self.getNext(visited, x, y)
+        stack = self.get_next(visited, x, y)
         while len(stack) > 0:
 
             front = []
@@ -107,13 +107,13 @@ class WGField:
                 cell = self.field[_y][_x]
 
                 if not cell.revealed:
-                    v_game_panel.buttons[_y][_x].Destroy()
+                    game_panel.buttons[_y][_x].Destroy()
                     cell.revealed = True
 
                 if cell.around > 0:
-                    wx.StaticText(v_game_panel, pos=(_x * 20, _y * 20), label=str(cell.around))
+                    wx.StaticText(game_panel, pos=(_x * 20, _y * 20), label=str(cell.around))
                 else:
-                    front.extend(self.getNext(visited, _x, _y))
+                    front.extend(self.get_next(visited, _x, _y))
             stack = front
 
 

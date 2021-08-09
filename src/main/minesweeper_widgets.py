@@ -25,7 +25,7 @@ class WGFieldButton(wx.Panel):
         self.disabled = False
         self.pressed = False
         self.marked = False
-        self.markInProgress = False
+        self.mark_in_progress = False
         self.x_index = x_index
         self.y_index = y_index
 
@@ -69,17 +69,17 @@ class WGFieldButton(wx.Panel):
 
     def OnRightDown(self, event):
         if not self.disabled:
-            self.markInProgress = True
+            self.mark_in_progress = True
 
     def OnRightUp(self, event):
-        if self.markInProgress:
+        if self.mark_in_progress:
             self.marked = not self.marked
             self.Refresh()
-            self.GetParent().controller.refresh_after_mark(self.x_index, self.y_index, self.marked)
+            self.GetParent().view.controller.refresh_after_mark(self.x_index, self.y_index, self.marked)
 
     def OnLeave(self, event):
         self.pressed = False
-        self.markInProgress = False
+        self.mark_in_progress = False
         self.Refresh()
 
     def SetOnClick(self, handler):

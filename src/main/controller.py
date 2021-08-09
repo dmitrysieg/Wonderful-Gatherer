@@ -1,41 +1,59 @@
 import wx
 
 
-class WGController(object):
+class MSController(object):
 
-    def __init__(self, window, score_panel, game_panel, score):
-        self.window = window
-        self.score_panel = score_panel
-        self.score_panel.controller = self
-        self.game_panel = game_panel
-        self.game_panel.controller = self
-        self.score = score
+    def WGClickHandler(self, button, controller):
+        field_view = button.parent
+        if field_view.field.is_mine(button.x_index, button.y_index):
+            controller.lose()
+        else:
+            around = field_view.field.get_around(button.x_index, button.y_index)
+            if around > 0:
+                wx.StaticText(field_view, pos=(button.x_index * 20, button.y_index * 20), label=str(around))
+            else:
+                field_view.field.reveal_around(field_view, button.x_index, button.y_index)
+            field_view.field.field[button.y_index][button.x_index].revealed = True
+            button.Destroy()
+
+    def __init__(self, view):
+        self.view = view
+        view.controller = self
+
         self.print_remaining()
+        self.bind_menu(view.menu)
 
-    def onExit(self, event):
-        self.window.Close()
+    def on_exit(self, event):
+        self.view.window.Close()
 
-    def BindMenu(self, menu):
-        menu.getMenuBar().Bind(wx.EVT_MENU, self.onExit, menu.getMenuExit())
+    def bind_menu(self, menu):
+        menu.menu_bar.Bind(wx.EVT_MENU, self.on_exit, menu.menu_exit)
 
     def reveal(self, x, y):
-        self.game_panel.buttons[y][x].Destroy()
-        self.game_panel.field.field[y][x].revealed = True
-        if self.game_panel.field.isMine(x, y):
-            self.game_panel.show_mine(x, y)
+        cell = self.view.game_panel.field.field[y][x]
+        if not cell.revealed:
+            self.view.game_panel.buttons[y][x].Destroy()
+            cell.revealed = True
+        if self.view.game_panel.field.is_mine(x, y):
+            self.view.game_panel.show_mine(x, y)
+
+    def reveal_all(self):
+        for y in range(0, self.view.game_panel.field.height):
+            for x in range(0, self.view.game_panel.field.width):
+                self.reveal(x, y)
 
     def check_mines(self, x, y, checked):
-        if self.game_panel.field.isMine(x, y):
+        if self.view.game_panel.field.is_mine(x, y):
             if checked:
-                self.game_panel.field.mines_left -= 1
+                self.view.game_panel.field.mines_left -= 1
             else:
-                self.game_panel.field.mines_left += 1
+                self.view.game_panel.field.mines_left += 1
 
-        return self.game_panel.field.mines_left == 0
+        return self.view.game_panel.field.mines_left == 0
 
     def print_remaining(self):
-        remaining = self.game_panel.field.mines_left
-        self.score.SetLabel(str(remaining))
+        remaining = self.view.game_panel.field.mines_left
+        self.view.score.SetLabel(str(remaining))
 
     def refresh_after_mark(self, x, y, checked):
         result = self.check_mines(x, y, checked)
@@ -45,17 +63,17 @@ class WGController(object):
             self.print_remaining()
 
     def win(self):
-        self.score.SetLabel("WIN!")
-        self.disableControls()
+        self.view.score.SetLabel("WIN!")
+        self.reveal_all()
 
     def lose(self):
-        self.score.SetLabel("LOSE!")
-        for mine in self.game_panel.field.mines:
+        self.view.score.SetLabel("LOSE!")
+        for mine in self.view.game_panel.field.mines:
             self.reveal(mine[0], mine[1])
-        self.disableControls()
+        self.disable_controls()
 
-    def disableControls(self):
-        for y in range(0, self.game_panel.field.height):
-            for x in range(0, self.game_panel.field.width):
-                if self.game_panel.buttons[y][x]:
-                    self.game_panel.buttons[y][x].disabled = True
+    def disable_controls(self):
+        for y in range(0, self.view.game_panel.field.height):
+            for x in range(0, self.view.game_panel.field.width):
+                if self.view.game_panel.buttons[y][x]:
+                    self.view.game_panel.buttons[y][x].disabled = True

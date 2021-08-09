@@ -15,9 +15,3 @@ class MSMenu:
 
         self.menu_bar.Append(self.menu_file, "Файл")
         self.menu_bar.Append(self.menu_help, "Помощь")
-
-    def getMenuBar(self):
-        return self.menu_bar
-
-    def getMenuExit(self):
-        return self.menu_exit
