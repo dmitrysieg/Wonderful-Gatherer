@@ -20,8 +20,11 @@ class MSController(object):
         self.view = view
         view.controller = self
 
-        self.print_remaining()
         self.bind_menu(view.menu)
+
+    def start_game_classic(self):
+        self.print_remaining()
+        self.view.start_game_classic()
 
     def on_exit(self, event):
         self.view.window.Close()
@@ -30,29 +33,29 @@ class MSController(object):
         menu.menu_bar.Bind(wx.EVT_MENU, self.on_exit, menu.menu_exit)
 
     def reveal(self, x, y):
-        cell = self.view.game_panel.field.field[y][x]
+        cell = self.view.field_view.field.field[y][x]
         if not cell.revealed:
-            self.view.game_panel.buttons[y][x].Destroy()
+            self.view.field_view.buttons[y][x].Destroy()
             cell.revealed = True
-        if self.view.game_panel.field.is_mine(x, y):
-            self.view.game_panel.show_mine(x, y)
+        if self.view.field_view.field.is_mine(x, y):
+            self.view.field_view.show_mine(x, y)
 
     def reveal_all(self):
-        for y in range(0, self.view.game_panel.field.height):
-            for x in range(0, self.view.game_panel.field.width):
+        for y in range(0, self.view.field_view.field.height):
+            for x in range(0, self.view.field_view.field.width):
                 self.reveal(x, y)
 
     def check_mines(self, x, y, checked):
-        if self.view.game_panel.field.is_mine(x, y):
+        if self.view.field_view.field.is_mine(x, y):
             if checked:
-                self.view.game_panel.field.mines_left -= 1
+                self.view.field_view.field.mines_left -= 1
             else:
-                self.view.game_panel.field.mines_left += 1
+                self.view.field_view.field.mines_left += 1
 
-        return self.view.game_panel.field.mines_left == 0
+        return self.view.field_view.field.mines_left == 0
 
     def print_remaining(self):
-        remaining = self.view.game_panel.field.mines_left
+        remaining = self.view.field_view.field.mines_left
         self.view.score.SetLabel(str(remaining))
 
     def refresh_after_mark(self, x, y, checked):
@@ -68,12 +71,12 @@ class MSController(object):
 
     def lose(self):
         self.view.score.SetLabel("LOSE!")
-        for mine in self.view.game_panel.field.mines:
+        for mine in self.view.field_view.field.mines:
             self.reveal(mine[0], mine[1])
         self.disable_controls()
 
     def disable_controls(self):
-        for y in range(0, self.view.game_panel.field.height):
-            for x in range(0, self.view.game_panel.field.width):
-                if self.view.game_panel.buttons[y][x]:
-                    self.view.game_panel.buttons[y][x].disabled = True
+        for y in range(0, self.view.field_view.field.height):
+            for x in range(0, self.view.field_view.field.width):
+                if self.view.field_view.buttons[y][x]:
+                    self.view.field_view.buttons[y][x].disabled = True

@@ -8,7 +8,7 @@ def main():
     app = wx.App()
     view = MSView()
     controller = MSController(view)
-    controller.bind_menu(view.menu)
+    controller.start_game_classic()
 
     app.MainLoop()
 

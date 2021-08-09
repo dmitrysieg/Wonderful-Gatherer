@@ -31,11 +31,11 @@ class MSView:
         self.score = wx.StaticText(self.score_panel, pos=(20, 10), label="")
 
         self.field = MSField(_h_number, _v_number).initialize()
-        self.game_panel = MSFieldView(self, panel, _h_number, _v_number, self.field).initialize()
+        self.field_view = MSFieldView(self, panel, _h_number, _v_number, self.field).initialize()
 
         innerBox = wx.BoxSizer(wx.VERTICAL)
         innerBox.Add(self.score_panel, 2, wx.EXPAND | wx.ALL, border=4) # todo fixed size
-        innerBox.Add(self.game_panel, 8, wx.EXPAND | wx.ALL, border=4)
+        innerBox.Add(self.field_view, 8, wx.EXPAND | wx.ALL, border=4)
 
         panel.SetAutoLayout(True)
         panel.SetSizer(innerBox)
@@ -46,3 +46,6 @@ class MSView:
         window.Layout()
 
         window.Show(True)
+
+    def start_game_classic(self):
+        None
