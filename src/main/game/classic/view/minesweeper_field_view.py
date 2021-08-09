@@ -1,5 +1,5 @@
 import wx
-from minesweeper_widgets import MSFieldButton
+from .minesweeper_field_button import MSFieldButton
 
 
 class MSFieldView(wx.Panel):

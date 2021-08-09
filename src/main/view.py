@@ -1,7 +1,7 @@
 # coding=utf-8
 import wx
-from minesweeper_field import MSField
-from minesweeper_field_view import MSFieldView
+from game.classic.model.minesweeper_field import MSField
+from game.classic.view.minesweeper_field_view import MSFieldView
 from menu import MSMenu
 
 

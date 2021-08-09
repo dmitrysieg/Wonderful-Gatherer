@@ -1,6 +1,6 @@
 # coding=utf-8
 import wx
-from controller import MSController
+from game.classic.controller.controller import MSController
 from view import MSView
 
 
