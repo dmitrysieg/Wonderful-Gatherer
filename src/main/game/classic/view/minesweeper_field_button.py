@@ -14,6 +14,7 @@ class MSFieldButton(wx.Panel):
 
         # Handlers
         self.OnClick = lambda: None
+        self.OnAfterMark = lambda: None
         self.Bind(wx.EVT_LEFT_DOWN   , self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP     , self.OnLeftUp)
         self.Bind(wx.EVT_RIGHT_DOWN  , self.OnRightDown)
@@ -75,7 +76,7 @@ class MSFieldButton(wx.Panel):
         if self.mark_in_progress:
             self.marked = not self.marked
             self.Refresh()
-            self.GetParent().view.controller.refresh_after_mark(self.x_index, self.y_index, self.marked)
+            self.OnAfterMark(self)
 
     def OnLeave(self, event):
         self.pressed = False
@@ -84,6 +85,9 @@ class MSFieldButton(wx.Panel):
 
     def SetOnClick(self, handler):
         self.OnClick = handler
+
+    def SetOnAfterMark(self, handler):
+        self.OnAfterMark = handler
 
     def OnSize(self, event):
         self.Refresh()

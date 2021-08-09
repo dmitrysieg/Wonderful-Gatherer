@@ -10,12 +10,14 @@ class MSCell:
 
 
 class MSField:
-    def __init__(self, width, height):
+    def __init__(self, game_view, width, height):
+        self.game_view = game_view
         self.width = width
         self.height = height
         self.field = []
         self.mines = []
         self.mines_left = None
+        self.initialize()
 
     def initialize(self):
 
@@ -37,8 +39,6 @@ class MSField:
             for i in range(0, self.width):
                 self.field[i][j].around = self.get_around(j, i)
 
-        return self
-
     @staticmethod
     def define_mine(x, y):
         if random.randint(0, 99) < 10:
@@ -48,6 +48,16 @@ class MSField:
 
     def is_mine(self, x, y):
         return self.field[y][x].mines > 0
+
+    def reveal(self, x, y):
+        self.field[y][x].revealed = True
+        around = self.get_around(x, y)
+        if around > 0:
+            self.game_view.show_amount(x, y, around)
+            self.game_view.after_reveal_cell(x, y)
+        else:
+            self.reveal_around(x, y)
+            self.game_view.after_reveal_cell(x, y)
 
     def get_around(self, x, y):
         sum = 0
@@ -94,7 +104,7 @@ class MSField:
                 self.visit(next, visited, x + 1, y + 1)
         return next
 
-    def reveal_around(self, field_view, x, y):
+    def reveal_around(self, x, y):
         visited = [[False for i in range(self.width)] for j in range(self.height)]
         visited[y][x] = True
         stack = self.get_next(visited, x, y)
@@ -107,11 +117,11 @@ class MSField:
                 cell = self.field[_y][_x]
 
                 if not cell.revealed:
-                    field_view.buttons[_y][_x].Destroy()
                     cell.revealed = True
+                    self.game_view.after_reveal_cell(_x, _y)
 
                 if cell.around > 0:
-                    field_view.show_amount(_x, _y, cell.around)
+                    self.game_view.show_amount(_x, _y, cell.around)
                 else:
                     front.extend(self.get_next(visited, _x, _y))
             stack = front
